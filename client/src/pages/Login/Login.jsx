@@ -54,6 +54,7 @@ const GoogleLoginButton = styled.div`
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate(null);
   const { login } = useAuth();
 
@@ -70,6 +71,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log("Error Creating User", error);
+      setErrMsg(error?.response?.data?.message);
     }
   }, [email, password, login, navigate]);
 
@@ -101,6 +103,7 @@ const Login = () => {
           <Button type="button" onClick={handleLogin}>
             Log In
           </Button>
+          {errMsg && <p style={{ color: "#ff0000" }}>{errMsg}</p>}
           <p>or</p>
 
           <GoogleLoginButton onClick={handleGoogleLogin}>

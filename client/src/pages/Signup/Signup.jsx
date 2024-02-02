@@ -54,6 +54,7 @@ const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate(null);
 
   /* SIGNUP FUNC */
@@ -67,6 +68,7 @@ const Signup = () => {
       if (res?.status === 201) navigate("/login");
     } catch (error) {
       console.error("Error Creating User", error);
+      setErrMsg(error?.response?.data?.message);
     }
   }, [username, email, password, navigate]);
 
@@ -105,6 +107,7 @@ const Signup = () => {
           <Button type="button" onClick={handleSignup}>
             Sign Up
           </Button>
+          {errMsg && <p style={{ color: "#ff0000" }}>{errMsg}</p>}
           <p>or</p>
 
           <GoogleSignupButton onClick={handleGoogleSignup}>
