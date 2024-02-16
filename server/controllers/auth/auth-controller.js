@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 /* MODEL IMPORT */
 const User = require('../../models/User');
+const { decryptData } = require('../../middlewares/decryption/decryptData');
 
 /* REGISTER USER */
 router.post('/register', async (req, res, next) => {
@@ -64,15 +65,19 @@ router.post('/login', async (req, res, next) => {
     }
 
     try {
-        const user = await User.findOne({ email });
-
+        /* DECRYPT DATA BEFORE SAVING */
+        const decryptedEmail = decryptData(email);
+        const decryptedPassword = decryptData(password);
+        
+        const user = await User.findOne({ email: decryptedEmail });
+        
         if (!user) {
             return res.status(401).json({
                 message: 'Invalid email'
             });
         }
 
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        const isPasswordMatch = await bcrypt.compare(decryptedPassword, user.password);
 
         if (!isPasswordMatch) {
             return res.status(401).json({

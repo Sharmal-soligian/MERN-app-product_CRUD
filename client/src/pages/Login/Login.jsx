@@ -4,6 +4,7 @@ import styled from "styled-components";
 import GoogleIcon from "@mui/icons-material/Google";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { encryptData } from "../../utils/encryptData";
 
 const Container = styled.div`
   display: flex;
@@ -62,8 +63,8 @@ const Login = () => {
   const handleLogin = useCallback(async () => {
     try {
       const res = await axios.post("http://localhost:5000/auth/login", {
-        email: email,
-        password: password,
+        email: encryptData(email),
+        password: encryptData(password),
       });
       if (res?.status === 200) {
         login(res?.data?.user);
